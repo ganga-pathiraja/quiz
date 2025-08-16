@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simple Quiz App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #141111;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #252222;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    .question {
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      background: #73438a;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    .options button:hover {
+      background: #ddd;
+    }
+    .options button.correct {
+      background: #4caf50;
+      color: white;
+    }
+    .options button.wrong {
+      background: #f44336;
+      color: white;
+    }
+    #nextBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      display: none;
+    }
+    #result {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body style="background-color: #b69eec;">
+  <h2>Simple Quiz App</h2>
+  <div id="quiz-container">
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <button id="nextBtn">Next</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "What is the capital of Sri Lanka?",
+        options: ["Colombo", "Kandy", "Galle", "Jaffna"],
+        answer: "Colombo"
+      },
+      {
+        question: "What is 2 + 2?",
+        options: ["3", "4", "5", "6"],
+        answer: "4"
+      },
+      {
+        question: "Which language is used for web development?",
+        options: ["Python", "JavaScript", "C++", "Java"],
+        answer: "JavaScript"
+      },
+      {
+        question: "Which language is primarily used for structuring web content?",
+        options: ["Python", "HTML", "C++", "Java"],
+        answer: "HTML"
+
+      },
+       {
+        question: "What does CSS stand for?",
+        options: ["Computer Style Sheets", "Creative Style Syntax", "Cascading Style Sheets", "Color Styling Sheets"],
+        answer: "Cascading Style Sheets"
+
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+
+    function loadQuestion() {
+      nextBtn.style.display = 'none';
+      resultEl.textContent = '';
+      const current = quizData[currentQuestion];
+      questionEl.textContent = current.question;
+      optionsEl.innerHTML = '';
+
+      current.options.forEach(option => {
+        const button = document.createElement('button');
+        button.textContent = option;
+        button.addEventListener('click', () => selectAnswer(button, current.answer));
+        optionsEl.appendChild(button);
+      });
+    }
+
+    function selectAnswer(button, correctAnswer) {
+      const buttons = optionsEl.querySelectorAll('button');
+      buttons.forEach(btn => btn.disabled = true);
+
+      if (button.textContent === correctAnswer) {
+        button.classList.add('correct');
+        score++;
+      } else {
+        button.classList.add('wrong');
+
+//answer button
+        buttons.forEach(btn => {
+          if (btn.textContent === correctAnswer) {
+            btn.classList.add('correct');
+          }
+        });
+      }
+      nextBtn.style.display = 'inline-block';
+    }
+
+    nextBtn.addEventListener('click', () => {
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    });
+
+    function showResult() {
+      questionEl.textContent = 'Quiz Completed!';
+      optionsEl.innerHTML = '';
+      nextBtn.style.display = 'none';
+      resultEl.textContent = `Your score: ${score} / ${quizData.length}`;
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
